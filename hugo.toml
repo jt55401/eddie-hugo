@@ -1,0 +1,13 @@
+# Default configuration for the Eddie Hugo module.
+# Site owners can override any of these in their own hugo.toml
+# under [params.eddie].
+
+[params.eddie]
+  enabled = true
+  indexUrl = "/eddie/index.bin"
+  position = "bottom-right"
+  theme = "auto"
+
+[module]
+  [module.hugoVersion]
+    min = "0.110.0"
