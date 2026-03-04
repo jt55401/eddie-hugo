@@ -69,6 +69,56 @@ let wasm_bindgen = (function(exports) {
     exports.init_engine = init_engine;
 
     /**
+     * Query the embedded claims section semantically.
+     * @param {string} query
+     * @param {number} top_k
+     * @returns {any}
+     */
+    function query_claims(query, top_k) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export, wasm.__wbindgen_export2);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.query_claims(retptr, ptr0, len0, top_k);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    exports.query_claims = query_claims;
+
+    /**
+     * Query the embedded QA section semantically.
+     * @param {string} query
+     * @param {number} top_k
+     * @returns {any}
+     */
+    function query_qa(query, top_k) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export, wasm.__wbindgen_export2);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.query_qa(retptr, ptr0, len0, top_k);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    exports.query_qa = query_qa;
+
+    /**
      * Search the index and return results as a JS array.
      *
      * `mode`: "semantic", "keyword", or "hybrid" (default).
@@ -98,6 +148,39 @@ let wasm_bindgen = (function(exports) {
     }
     exports.search_query = search_query;
 
+    /**
+     * Search and optionally synthesize a grounded answer inside WASM.
+     * @param {string} query
+     * @param {number} top_k
+     * @param {number} answer_top_k
+     * @param {string} mode
+     * @param {boolean} answer_mode
+     * @param {string} qa_subject
+     * @returns {any}
+     */
+    function search_with_answer(query, top_k, answer_top_k, mode, answer_mode, qa_subject) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export, wasm.__wbindgen_export2);
+            const len0 = WASM_VECTOR_LEN;
+            const ptr1 = passStringToWasm0(mode, wasm.__wbindgen_export, wasm.__wbindgen_export2);
+            const len1 = WASM_VECTOR_LEN;
+            const ptr2 = passStringToWasm0(qa_subject, wasm.__wbindgen_export, wasm.__wbindgen_export2);
+            const len2 = WASM_VECTOR_LEN;
+            wasm.search_with_answer(retptr, ptr0, len0, top_k, answer_top_k, ptr1, len1, answer_mode, ptr2, len2);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    exports.search_with_answer = search_with_answer;
+
     function __wbg_get_imports() {
         const import0 = {
             __proto__: null,
@@ -121,6 +204,10 @@ let wasm_bindgen = (function(exports) {
             __wbg_new_ab79df5bd7c26067: function() {
                 const ret = new Object();
                 return addHeapObject(ret);
+            },
+            __wbg_now_16f0c993d5dd6c27: function() {
+                const ret = Date.now();
+                return ret;
             },
             __wbg_set_282384002438957f: function(arg0, arg1, arg2) {
                 getObject(arg0)[arg1 >>> 0] = takeObject(arg2);
