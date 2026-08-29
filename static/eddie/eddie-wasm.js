@@ -5,17 +5,126 @@ let wasm_bindgen = (function(exports) {
     }
 
     /**
+     * One chunk by id.
+     * @param {number} id
+     * @returns {string}
+     */
+    function chunk(id) {
+        let deferred2_0;
+        let deferred2_1;
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.chunk(retptr, id);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+            var r3 = getDataViewMemory0().getInt32(retptr + 4 * 3, true);
+            var ptr1 = r0;
+            var len1 = r1;
+            if (r3) {
+                ptr1 = 0; len1 = 0;
+                throw takeObject(r2);
+            }
+            deferred2_0 = ptr1;
+            deferred2_1 = len1;
+            return getStringFromWasm0(ptr1, len1);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+            wasm.__wbindgen_export2(deferred2_0, deferred2_1, 1);
+        }
+    }
+    exports.chunk = chunk;
+
+    /**
+     * Load the BERT-family model for a `wasm-candle` lane of the loaded index.
+     * @param {string} lane_id
+     * @param {Uint8Array} config
+     * @param {Uint8Array} tokenizer
+     * @param {Uint8Array} weights
+     */
+    function init_dense_wasm(lane_id, config, tokenizer, weights) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passStringToWasm0(lane_id, wasm.__wbindgen_export3, wasm.__wbindgen_export4);
+            const len0 = WASM_VECTOR_LEN;
+            const ptr1 = passArray8ToWasm0(config, wasm.__wbindgen_export3);
+            const len1 = WASM_VECTOR_LEN;
+            const ptr2 = passArray8ToWasm0(tokenizer, wasm.__wbindgen_export3);
+            const len2 = WASM_VECTOR_LEN;
+            const ptr3 = passArray8ToWasm0(weights, wasm.__wbindgen_export3);
+            const len3 = WASM_VECTOR_LEN;
+            wasm.init_dense_wasm(retptr, ptr0, len0, ptr1, len1, ptr2, len2, ptr3, len3);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            if (r1) {
+                throw takeObject(r0);
+            }
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    exports.init_dense_wasm = init_dense_wasm;
+
+    /**
+     * Parse and validate the index. Replaces any previously loaded index and
+     * forgets its dense embedder / sparse tokenizer.
+     * @param {Uint8Array} index_bytes
+     */
+    function init_index(index_bytes) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passArray8ToWasm0(index_bytes, wasm.__wbindgen_export3);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.init_index(retptr, ptr0, len0);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            if (r1) {
+                throw takeObject(r0);
+            }
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    exports.init_index = init_index;
+
+    /**
+     * Load the WordPiece tokenizer that enables the learned-sparse arm. The
+     * bytes must be the `tokenizer.json` the index was built with: their
+     * SHA-256 is checked against `manifest.sparse.vocab_hash`, because a
+     * different vocabulary yields different token ids and a sparse arm that
+     * scores noise while still looking healthy.
+     * @param {Uint8Array} tokenizer_bytes
+     */
+    function init_sparse_tokenizer(tokenizer_bytes) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passArray8ToWasm0(tokenizer_bytes, wasm.__wbindgen_export3);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.init_sparse_tokenizer(retptr, ptr0, len0);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            if (r1) {
+                throw takeObject(r0);
+            }
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    exports.init_sparse_tokenizer = init_sparse_tokenizer;
+
+    /**
+     * Read the uncompressed manifest at the head of an `.ed` file.
      * @param {Uint8Array} index_bytes
      * @returns {string}
      */
-    function extract_model_id(index_bytes) {
+    function manifest(index_bytes) {
         let deferred3_0;
         let deferred3_1;
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            const ptr0 = passArray8ToWasm0(index_bytes, wasm.__wbindgen_export);
+            const ptr0 = passArray8ToWasm0(index_bytes, wasm.__wbindgen_export3);
             const len0 = WASM_VECTOR_LEN;
-            wasm.extract_model_id(retptr, ptr0, len0);
+            wasm.manifest(retptr, ptr0, len0);
             var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
             var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
             var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
@@ -31,202 +140,150 @@ let wasm_bindgen = (function(exports) {
             return getStringFromWasm0(ptr2, len2);
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
-            wasm.__wbindgen_export4(deferred3_0, deferred3_1, 1);
+            wasm.__wbindgen_export2(deferred3_0, deferred3_1, 1);
         }
     }
-    exports.extract_model_id = extract_model_id;
+    exports.manifest = manifest;
 
     /**
-     * Initialize the search engine from raw model and index bytes.
-     *
-     * Called once by the Web Worker after downloading all assets.
-     * @param {Uint8Array} config_bytes
-     * @param {Uint8Array} tokenizer_bytes
-     * @param {Uint8Array} weights_bytes
-     * @param {Uint8Array} index_bytes
+     * The text of a page (by URL) in document order: its chunks at the finest
+     * granularity present (`fine` when the index has it), so coarse and summary
+     * chunks never duplicate the same paragraphs.
+     * @param {string} url
+     * @returns {string}
      */
-    function init_engine(config_bytes, tokenizer_bytes, weights_bytes, index_bytes) {
+    function page(url) {
+        let deferred3_0;
+        let deferred3_1;
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            const ptr0 = passArray8ToWasm0(config_bytes, wasm.__wbindgen_export);
+            const ptr0 = passStringToWasm0(url, wasm.__wbindgen_export3, wasm.__wbindgen_export4);
             const len0 = WASM_VECTOR_LEN;
-            const ptr1 = passArray8ToWasm0(tokenizer_bytes, wasm.__wbindgen_export);
-            const len1 = WASM_VECTOR_LEN;
-            const ptr2 = passArray8ToWasm0(weights_bytes, wasm.__wbindgen_export);
-            const len2 = WASM_VECTOR_LEN;
-            const ptr3 = passArray8ToWasm0(index_bytes, wasm.__wbindgen_export);
-            const len3 = WASM_VECTOR_LEN;
-            wasm.init_engine(retptr, ptr0, len0, ptr1, len1, ptr2, len2, ptr3, len3);
-            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
-            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
-            if (r1) {
-                throw takeObject(r0);
-            }
-        } finally {
-            wasm.__wbindgen_add_to_stack_pointer(16);
-        }
-    }
-    exports.init_engine = init_engine;
-
-    /**
-     * Query the embedded claims section semantically.
-     * @param {string} query
-     * @param {number} top_k
-     * @returns {any}
-     */
-    function query_claims(query, top_k) {
-        try {
-            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export, wasm.__wbindgen_export2);
-            const len0 = WASM_VECTOR_LEN;
-            wasm.query_claims(retptr, ptr0, len0, top_k);
+            wasm.page(retptr, ptr0, len0);
             var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
             var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
             var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
-            if (r2) {
-                throw takeObject(r1);
+            var r3 = getDataViewMemory0().getInt32(retptr + 4 * 3, true);
+            var ptr2 = r0;
+            var len2 = r1;
+            if (r3) {
+                ptr2 = 0; len2 = 0;
+                throw takeObject(r2);
             }
-            return takeObject(r0);
+            deferred3_0 = ptr2;
+            deferred3_1 = len2;
+            return getStringFromWasm0(ptr2, len2);
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
+            wasm.__wbindgen_export2(deferred3_0, deferred3_1, 1);
         }
     }
-    exports.query_claims = query_claims;
+    exports.page = page;
 
     /**
-     * Query the embedded QA section semantically.
+     * Nearest QA entries by cosine on the qa dense lane. Returns `[]` when the
+     * index has no qa section or no query vector can be produced.
      * @param {string} query
-     * @param {number} top_k
-     * @returns {any}
+     * @param {string | null | undefined} dense_lane_id
+     * @param {Float32Array | null | undefined} dense_query_vec
+     * @param {number} k
+     * @returns {string}
      */
-    function query_qa(query, top_k) {
+    function qa_lookup(query, dense_lane_id, dense_query_vec, k) {
+        let deferred5_0;
+        let deferred5_1;
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export, wasm.__wbindgen_export2);
+            const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export3, wasm.__wbindgen_export4);
             const len0 = WASM_VECTOR_LEN;
-            wasm.query_qa(retptr, ptr0, len0, top_k);
+            var ptr1 = isLikeNone(dense_lane_id) ? 0 : passStringToWasm0(dense_lane_id, wasm.__wbindgen_export3, wasm.__wbindgen_export4);
+            var len1 = WASM_VECTOR_LEN;
+            var ptr2 = isLikeNone(dense_query_vec) ? 0 : passArrayF32ToWasm0(dense_query_vec, wasm.__wbindgen_export3);
+            var len2 = WASM_VECTOR_LEN;
+            wasm.qa_lookup(retptr, ptr0, len0, ptr1, len1, ptr2, len2, k);
             var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
             var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
             var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
-            if (r2) {
-                throw takeObject(r1);
+            var r3 = getDataViewMemory0().getInt32(retptr + 4 * 3, true);
+            var ptr4 = r0;
+            var len4 = r1;
+            if (r3) {
+                ptr4 = 0; len4 = 0;
+                throw takeObject(r2);
             }
-            return takeObject(r0);
+            deferred5_0 = ptr4;
+            deferred5_1 = len4;
+            return getStringFromWasm0(ptr4, len4);
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
+            wasm.__wbindgen_export2(deferred5_0, deferred5_1, 1);
         }
     }
-    exports.query_qa = query_qa;
+    exports.qa_lookup = qa_lookup;
 
     /**
-     * Search the index and return results as a JS array.
+     * Search the loaded index.
      *
-     * `mode`: "semantic", "keyword", or "hybrid" (default).
+     * `mode`: `hybrid` (default), `dense`, `sparse`, or `keyword`.
+     * `dense_lane_id` + `dense_query_vec`: a query vector produced outside WASM
+     * (transformers.js) for the named lane. With both `null`, the WASM lane
+     * loaded by `init_dense_wasm` embeds the query (exactly once); if none is
+     * loaded the dense arm is skipped and reported in `degraded`.
      * @param {string} query
      * @param {number} top_k
      * @param {string} mode
-     * @returns {any}
+     * @param {string | null} [dense_lane_id]
+     * @param {Float32Array | null} [dense_query_vec]
+     * @returns {string}
      */
-    function search_query(query, top_k, mode) {
+    function search(query, top_k, mode, dense_lane_id, dense_query_vec) {
+        let deferred6_0;
+        let deferred6_1;
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export, wasm.__wbindgen_export2);
+            const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export3, wasm.__wbindgen_export4);
             const len0 = WASM_VECTOR_LEN;
-            const ptr1 = passStringToWasm0(mode, wasm.__wbindgen_export, wasm.__wbindgen_export2);
+            const ptr1 = passStringToWasm0(mode, wasm.__wbindgen_export3, wasm.__wbindgen_export4);
             const len1 = WASM_VECTOR_LEN;
-            wasm.search_query(retptr, ptr0, len0, top_k, ptr1, len1);
+            var ptr2 = isLikeNone(dense_lane_id) ? 0 : passStringToWasm0(dense_lane_id, wasm.__wbindgen_export3, wasm.__wbindgen_export4);
+            var len2 = WASM_VECTOR_LEN;
+            var ptr3 = isLikeNone(dense_query_vec) ? 0 : passArrayF32ToWasm0(dense_query_vec, wasm.__wbindgen_export3);
+            var len3 = WASM_VECTOR_LEN;
+            wasm.search(retptr, ptr0, len0, top_k, ptr1, len1, ptr2, len2, ptr3, len3);
             var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
             var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
             var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
-            if (r2) {
-                throw takeObject(r1);
+            var r3 = getDataViewMemory0().getInt32(retptr + 4 * 3, true);
+            var ptr5 = r0;
+            var len5 = r1;
+            if (r3) {
+                ptr5 = 0; len5 = 0;
+                throw takeObject(r2);
             }
-            return takeObject(r0);
+            deferred6_0 = ptr5;
+            deferred6_1 = len5;
+            return getStringFromWasm0(ptr5, len5);
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
+            wasm.__wbindgen_export2(deferred6_0, deferred6_1, 1);
         }
     }
-    exports.search_query = search_query;
-
-    /**
-     * Search and optionally synthesize a grounded answer inside WASM.
-     * @param {string} query
-     * @param {number} top_k
-     * @param {number} answer_top_k
-     * @param {string} mode
-     * @param {boolean} answer_mode
-     * @param {string} qa_subject
-     * @returns {any}
-     */
-    function search_with_answer(query, top_k, answer_top_k, mode, answer_mode, qa_subject) {
-        try {
-            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export, wasm.__wbindgen_export2);
-            const len0 = WASM_VECTOR_LEN;
-            const ptr1 = passStringToWasm0(mode, wasm.__wbindgen_export, wasm.__wbindgen_export2);
-            const len1 = WASM_VECTOR_LEN;
-            const ptr2 = passStringToWasm0(qa_subject, wasm.__wbindgen_export, wasm.__wbindgen_export2);
-            const len2 = WASM_VECTOR_LEN;
-            wasm.search_with_answer(retptr, ptr0, len0, top_k, answer_top_k, ptr1, len1, answer_mode, ptr2, len2);
-            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
-            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
-            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
-            if (r2) {
-                throw takeObject(r1);
-            }
-            return takeObject(r0);
-        } finally {
-            wasm.__wbindgen_add_to_stack_pointer(16);
-        }
-    }
-    exports.search_with_answer = search_with_answer;
-
+    exports.search = search;
     function __wbg_get_imports() {
         const import0 = {
             __proto__: null,
-            __wbg_String_8564e559799eccda: function(arg0, arg1) {
-                const ret = String(getObject(arg1));
-                const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_export, wasm.__wbindgen_export2);
-                const len1 = WASM_VECTOR_LEN;
-                getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);
-                getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);
-            },
-            __wbg___wbindgen_throw_6ddd609b62940d55: function(arg0, arg1) {
+            __wbg___wbindgen_throw_bb96b2010945f0bc: function(arg0, arg1) {
                 throw new Error(getStringFromWasm0(arg0, arg1));
             },
-            __wbg_getRandomValues_3f44b700395062e5: function() { return handleError(function (arg0, arg1) {
+            __wbg_error_dd408a7b3cb542dd: function(arg0) {
+                console.error(getObject(arg0));
+            },
+            __wbg_getRandomValues_a608c4436c19407a: function() { return handleError(function (arg0, arg1) {
                 globalThis.crypto.getRandomValues(getArrayU8FromWasm0(arg0, arg1));
             }, arguments); },
-            __wbg_new_a70fbab9066b301f: function() {
-                const ret = new Array();
-                return addHeapObject(ret);
-            },
-            __wbg_new_ab79df5bd7c26067: function() {
-                const ret = new Object();
-                return addHeapObject(ret);
-            },
-            __wbg_now_16f0c993d5dd6c27: function() {
-                const ret = Date.now();
-                return ret;
-            },
-            __wbg_set_282384002438957f: function(arg0, arg1, arg2) {
-                getObject(arg0)[arg1 >>> 0] = takeObject(arg2);
-            },
-            __wbg_set_6be42768c690e380: function(arg0, arg1, arg2) {
-                getObject(arg0)[takeObject(arg1)] = takeObject(arg2);
-            },
-            __wbindgen_cast_0000000000000001: function(arg0) {
-                // Cast intrinsic for `F64 -> Externref`.
-                const ret = arg0;
-                return addHeapObject(ret);
-            },
-            __wbindgen_cast_0000000000000002: function(arg0, arg1) {
+            __wbindgen_cast_0000000000000001: function(arg0, arg1) {
                 // Cast intrinsic for `Ref(String) -> Externref`.
                 const ret = getStringFromWasm0(arg0, arg1);
-                return addHeapObject(ret);
-            },
-            __wbindgen_object_clone_ref: function(arg0) {
-                const ret = getObject(arg0);
                 return addHeapObject(ret);
             },
             __wbindgen_object_drop_ref: function(arg0) {
@@ -267,9 +324,16 @@ let wasm_bindgen = (function(exports) {
         return cachedDataViewMemory0;
     }
 
+    let cachedFloat32ArrayMemory0 = null;
+    function getFloat32ArrayMemory0() {
+        if (cachedFloat32ArrayMemory0 === null || cachedFloat32ArrayMemory0.byteLength === 0) {
+            cachedFloat32ArrayMemory0 = new Float32Array(wasm.memory.buffer);
+        }
+        return cachedFloat32ArrayMemory0;
+    }
+
     function getStringFromWasm0(ptr, len) {
-        ptr = ptr >>> 0;
-        return decodeText(ptr, len);
+        return decodeText(ptr >>> 0, len);
     }
 
     let cachedUint8ArrayMemory0 = null;
@@ -286,7 +350,7 @@ let wasm_bindgen = (function(exports) {
         try {
             return f.apply(this, args);
         } catch (e) {
-            wasm.__wbindgen_export3(addHeapObject(e));
+            wasm.__wbindgen_export(addHeapObject(e));
         }
     }
 
@@ -295,9 +359,20 @@ let wasm_bindgen = (function(exports) {
 
     let heap_next = heap.length;
 
+    function isLikeNone(x) {
+        return x === undefined || x === null;
+    }
+
     function passArray8ToWasm0(arg, malloc) {
         const ptr = malloc(arg.length * 1, 1) >>> 0;
         getUint8ArrayMemory0().set(arg, ptr / 1);
+        WASM_VECTOR_LEN = arg.length;
+        return ptr;
+    }
+
+    function passArrayF32ToWasm0(arg, malloc) {
+        const ptr = malloc(arg.length * 4, 4) >>> 0;
+        getFloat32ArrayMemory0().set(arg, ptr / 4);
         WASM_VECTOR_LEN = arg.length;
         return ptr;
     }
@@ -366,22 +441,28 @@ let wasm_bindgen = (function(exports) {
 
     let WASM_VECTOR_LEN = 0;
 
-    let wasmModule, wasm;
+    let wasmModule, wasmInstance, wasm;
     function __wbg_finalize_init(instance, module) {
+        wasmInstance = instance;
         wasm = instance.exports;
         wasmModule = module;
         cachedDataViewMemory0 = null;
+        cachedFloat32ArrayMemory0 = null;
         cachedUint8ArrayMemory0 = null;
         return wasm;
     }
 
     async function __wbg_load(module, imports) {
         if (typeof Response === 'function' && module instanceof Response) {
+            if (!module.ok) {
+                throw new Error(`failed to fetch Wasm: ${module.status} ${module.statusText} fetching '${module.url}'`);
+            }
+
             if (typeof WebAssembly.instantiateStreaming === 'function') {
                 try {
                     return await WebAssembly.instantiateStreaming(module, imports);
                 } catch (e) {
-                    const validResponse = module.ok && expectedResponseType(module.type);
+                    const validResponse = expectedResponseType(module.type);
 
                     if (validResponse && module.headers.get('Content-Type') !== 'application/wasm') {
                         console.warn("`WebAssembly.instantiateStreaming` failed because your server does not serve Wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n", e);
