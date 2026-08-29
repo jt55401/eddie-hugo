@@ -181,8 +181,11 @@ let wasm_bindgen = (function(exports) {
     exports.page = page;
 
     /**
-     * Nearest QA entries by cosine on the qa dense lane. Returns `[]` when the
-     * index has no qa section or no query vector can be produced.
+     * QA entries ranked by [`crate::search::rank_qa`]: the qa dense lane's
+     * cosine fused with lexical overlap and a BM25 pass over the questions and
+     * answers. Returns `[]` when the index has no qa section; without a query
+     * vector (no runnable embedder) the ranking is lexical only and no hit is
+     * `confident`.
      * @param {string} query
      * @param {string | null | undefined} dense_lane_id
      * @param {Float32Array | null | undefined} dense_query_vec

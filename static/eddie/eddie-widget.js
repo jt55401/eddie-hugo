@@ -639,7 +639,36 @@ const EddieLib = {};
     return { answer: text, citations, nohit: text === "" };
   }
 
+
+  // FAQ card gate: prefer the WASM's fused `confident` flag (qa_lookup v0.4.1+);
+  // older indexes only carry a dense score, so fall back to a plain cutoff.
+  function faqPasses(hit, qaMode) {
+    if (!hit || typeof hit !== "object") return false;
+    if (qaMode === "off") return false;
+    if (qaMode === "always") return true;
+    if (typeof hit.confident === "boolean") return hit.confident;
+    return typeof hit.score === "number" && hit.score >= 0.5;
+  }
+
+  // Turn confident QA hits into agent evidence items ("Q: … A: …") so the
+  // answer model sees the FAQ lane, not only chunk text.
+  function qaEvidence(hits, max) {
+    const limit = max == null ? 2 : max;
+    const out = [];
+    for (const h of Array.isArray(hits) ? hits : []) {
+      if (out.length >= limit) break;
+      if (!faqPasses(h, "auto")) continue;
+      const q = String(h.question || "").trim();
+      const a = String(h.answer || "").trim();
+      if (!q || !a) continue;
+      out.push({ title: "FAQ: " + q, url: h.source_url || "", text: "Q: " + q + "\nA: " + a, faq: true });
+    }
+    return out;
+  }
+
   return {
+    faqPasses,
+    qaEvidence,
     NOHIT,
     AGENT_MODEL_SIZES,
     PLAN_SCHEMA,
@@ -1659,8 +1688,7 @@ const EddieLib = {};
       return;
     }
     const best = hits[0];
-    const threshold = config.qaMode === "always" ? 0 : 0.5;
-    if (!best || typeof best.score !== "number" || best.score < threshold) {
+    if (!lib.faqPasses(best, config.qaMode)) {
       hide(faqCard);
       return;
     }
@@ -1886,7 +1914,12 @@ const EddieLib = {};
       const evidence = lib.mergeEvidence(lists, 6);
       await expandShortEvidence(evidence);
       if (run.aborted) return;
-      run.evidence = evidence.map((r) => ({ title: r.title, url: r.url, text: r.text || r.snippet || "" }));
+      // Confident FAQ entries (build-time QA lane) go first: they are short,
+      // direct, and already carry a source page.
+      const faqHits = await callWorker("qa", { query: question, k: 3 }).then((m) => m.hits || []).catch(() => []);
+      if (run.aborted) return;
+      const faqItems = lib.qaEvidence(faqHits, 2);
+      run.evidence = faqItems.concat(evidence.map((r) => ({ title: r.title, url: r.url, text: r.text || r.snippet || "" })));
       answerProgress.textContent = "Answering…";
       await streamAnswer(run);
     } catch (err) {
