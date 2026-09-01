@@ -18,11 +18,26 @@
 # `immutable`.
 #
 # eddie-boot.js is the one URL the page references without a ?v=, so it is
-# also the one that has to keep revalidating: it carries the asset hash the
-# rest of the runtime is fetched with. 300 seconds bounds how long a browser
-# can keep serving an old build's hash after an upgrade; the revalidation
-# itself is a 304 with no body. Later rules override earlier ones for the
-# same header on both hosts.
+# the one that should keep revalidating: it carries the asset hash the rest
+# of the runtime is fetched with.
+#
+# Two things measured on Cloudflare Pages (www.jason-grey.com, 2026-09-01)
+# that the rules below cannot get around:
+#
+#   Pages MERGES the directives of every matching rule rather than letting a
+#   later rule replace an earlier one, so `immutable` from the wildcard
+#   reaches eddie-boot.js too. Naming the long-lived files one per line
+#   instead of using the wildcard was worse: `immutable` was then dropped
+#   from all of them.
+#
+#   The zone's Browser Cache TTL wins over a smaller max-age here, so the
+#   300 below came back as 14400.
+#
+# The result on that zone is `max-age=14400, immutable, must-revalidate` for
+# the loader: an Eddie upgrade reaches a returning visitor within four hours
+# rather than five minutes. Everything else is correctly immutable, which is
+# the part that matters. Set Browser Cache TTL to "Respect Existing Headers"
+# in the Cloudflare dashboard if you want the five minutes.
 
 /eddie/*
   Cache-Control: public, max-age=31536000, immutable
